@@ -6,6 +6,7 @@ public class RomanNumeral {
     
     private int value;
     
+    
     public RomanNumeral(){
         value = 1;
     }
@@ -17,38 +18,49 @@ public class RomanNumeral {
             throw new IllegalArgumentException();
     }
     
-    public RomanNumeral(String s){
-        
+    public RomanNumeral(String str){
+        value = toInt(str);
     }
     
-    private int toInt(String s){
-        
-        return 0;
+    private int toInt(String str){
+        int curValue = 0;
+        for(int i = str.length() - 1; i >= 0 ; i--)
+            curValue+= valueOf(str.charAt(i));
+          
+        return curValue;
     }
-    // I V X L C D M
-    public int valueOf(char c)throws NumberFormatException{
-        int a = c;
-        switch(a){
-            case 73:
-            case 105: a=1; break;
-            case 86:
-            case 118: a=5; break;
-            case 88:
-            case 120: a=10; break;
-            case 76:
-            case 108: a=50; break;
-            case 67:
-            case 99: a=100; break;
-            case 68: 
-            case 100: a=500; break;
-            case 77: 
-            case 109: a=1000; break;
+    
+    private int valueOf(char c) throws NumberFormatException{
+        int curValue = 0;
+        switch(c){
+            case 'i':
+            case 'I': curValue = 1; break;
+            case 'v':
+            case 'V': curValue = 5; break;
+            case 'x':
+            case 'X': curValue = 10; break;
+            case 'l':
+            case 'L': curValue = 50; break;
+            case 'c':
+            case 'C': curValue = 100; break;
+            case 'd':
+            case 'D': curValue = 500; break;
+            case 'm':
+            case 'M': curValue = 1000; break;
             default: throw new NumberFormatException();
         }
-        System.out.print(a);
-        return a;
+        return curValue;
     }
     
-
-
+    public void setRomanNumeral(int i){
+    
+    }
+    
+    public void setRomanNumeral(String str){
+        
+    }
+    
+    public void print(){
+        System.out.println(value);
+    }
 }
