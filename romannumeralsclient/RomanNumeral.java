@@ -30,7 +30,7 @@ public class RomanNumeral {
             //return curValue;
         // else 
             // throw new NumberFormatException();
-        //return curValue;
+        return curValue;
     }
     
     private int valueOf(char c) throws NumberFormatException{
