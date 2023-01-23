@@ -14,7 +14,7 @@ public class RomanNumeral {
         if(i >= 1 && i <= 4000)
             value = i;
         else
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Value not within range of Roman Numerals");
     }
     
     public RomanNumeral(String str){
@@ -26,10 +26,6 @@ public class RomanNumeral {
         for(int i = str.length() - 1; i >= 0 ; i--)
             curValue+= valueOf(str.charAt(i));
         
-        // if(str.equals(str.toString()))
-            //return curValue;
-        // else 
-            // throw new NumberFormatException();
         return curValue;
     }
     
@@ -63,15 +59,25 @@ public class RomanNumeral {
         return roman.toString();    
     }
     
-    public void setRomanNumeral(int i){
-    
+    public void setRomanNumeral(int i) throws IllegalArgumentException{
+        if(value < 1 || value > 4000)
+            throw new IllegalArgumentException("Value not within Roman Numeral range");
+        else
+            value = i;
     }
     
     public void setRomanNumeral(String str){
-        
+        value = this.toInt(str);
     }
     
-    public void print(){
-        System.out.println(value);
+    public int getValue(){
+        return value;
     }
+    
+    @Override
+    public boolean equals(Object o){
+        return value == ((RomanNumeral)(o)).value;
+    }
+    
+
 }
