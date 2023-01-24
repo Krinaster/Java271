@@ -1,7 +1,6 @@
-
 package romannumeralsclient;
 
-public class RomanNumeral {
+public class RomanNumeral extends Object {
     
     private int value;
     
@@ -18,16 +17,17 @@ public class RomanNumeral {
     }
     
     public RomanNumeral(String str){
-        value = toInt(str);
+        value = toInteger(str);
     }
     
-    private int toInt(String str){
+    /*private int toInt(String str){
         int curValue = 0;
         for(int i = str.length() - 1; i >= 0 ; i--)
             curValue+= valueOf(str.charAt(i));
         
         return curValue;
     }
+    */
     
     private int valueOf(char c) throws NumberFormatException{
         int curValue = 0;
@@ -59,6 +59,20 @@ public class RomanNumeral {
         return roman.toString();    
     }
     
+    public int toInteger(String s) {
+        int lastValue = 0, romanValue = 0, curValue = 0;
+        for(int i=s.length()-1; i>= 0; i--){
+            curValue = valueOf(s.charAt(i));
+            if(curValue < lastValue)
+                romanValue -= curValue;
+            else
+                romanValue += curValue;
+            lastValue = curValue;
+        }
+            
+        return romanValue;
+    }
+    
     public void setRomanNumeral(int i) throws IllegalArgumentException{
         if(value < 1 || value > 4000)
             throw new IllegalArgumentException("Value not within Roman Numeral range");
@@ -67,7 +81,7 @@ public class RomanNumeral {
     }
     
     public void setRomanNumeral(String str){
-        value = this.toInt(str);
+        value = this.toInteger(str);
     }
     
     public int getValue(){
