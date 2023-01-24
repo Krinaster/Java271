@@ -19,5 +19,9 @@ public class TinyRoman extends RomanNumeral{
         if(this.getValue() > 100)
             throw new IllegalArgumentException("TinyRoman is capped at 100, try using Roman");
     }
+    
+    public RomanNumeral add(RomanNumeral r){
+        return new RomanNumeral(this.getValue() + r.getValue());
+    }
 
 }
