@@ -22,6 +22,18 @@ public class RomanNumeralsClient {
         
         System.out.println(test1.equals(test2));
         
+        RomanNumeral test3 = new RomanNumeral("IV");
+        System.out.println(test3);
+        
+         TinyRoman tr1 = new TinyRoman(),
+              tr2= new TinyRoman(85),
+              tr3 = new TinyRoman("I");
+         
+         System.out.println(tr1 + "\n" + tr2 + "\n" + tr3);
     }
+    
+   
+    
+    
     
 }
