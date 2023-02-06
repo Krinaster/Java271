@@ -30,7 +30,7 @@ public class Background extends JPanel{
         
         // Drawing Polygon
         g2.setColor(Color.CYAN);
-        g2.drawPolygon(new int[]{5,100,200,300,400,500},new int[]{850,750,750,850,850,850},6);
+        g2.fillPolygon(new int[]{5,100,300,400,600,700,900,1000,1200,1300,1500,1585},new int[]{850,750,750,850,850,750,750,850,850,750,750,850,850,850},12);
     }
 
 } // End of Background
