@@ -85,4 +85,11 @@ public class City extends Polygon {
         return xpoints[0];
     }
     
+    public int getCenterX(){
+        return getRight()+getLeft() / 2;
+    }
+    
+    public int getCenterY(){
+        return getTop() + getBottom() / 2;
+    }
 } // End of class

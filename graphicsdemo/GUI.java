@@ -35,6 +35,7 @@ public class GUI {
         leftPanel.setBackground(Color.WHITE);
         rightPanel = new RedYard();
         
+        
         // rightPanel.setBackground(Color.RED);
         
         window.setBackground(Color.MAGENTA);
@@ -53,7 +54,7 @@ public class GUI {
         // Start the timer
         tictoc.start();
         
-        
+        rightPanel.createMissiles();
     } // End of GUI class
     
     private class TextListener implements KeyListener {

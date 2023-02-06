@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -20,6 +22,13 @@ public class RedYard extends JPanel{
     private double theta = .1;
     private ImageIcon Plane;
     private ImageIcon Missile;
+    private int curLevel = 1, curMissileNum = 1;
+    private ArrayList<Missile> activeMissile = new ArrayList<>();
+    private Random rand = new Random();
+    
+    private final int MISSILE_WIDTH = 20;
+    private final int MISSILE_CHANGE_PER_LEVEL = 2;
+    private final int INITIAL_NUMBER_OF_MISSILES = 3;
     
     public RedYard() {
         super();
@@ -28,7 +37,14 @@ public class RedYard extends JPanel{
         strLoc = new Point(25,300);
         Plane = new ImageIcon("Plane.png");
         Missile = new ImageIcon("Missile2.png");
+        
+          
+    }
     
+    public void createMissiles(){
+        for(int i =0; i<INITIAL_NUMBER_OF_MISSILES+MISSILE_CHANGE_PER_LEVEL*curLevel; i++)
+                        // First missile attribute should be random, but had to remove to run program
+            activeMissile.add(new Missile(rand.nextInt(getWidth()), 5, MISSILE_WIDTH, MISSILE_WIDTH,Math.atan(city[0].getCenterY()/city[0].getCenterX()),20));
     }
     
     @Override
@@ -106,9 +122,14 @@ public class RedYard extends JPanel{
         
         g2.drawImage(Plane.getImage() , 100, 100, 100, 50, null);
         
-        
-    }
+        // Draw the missiles
+        for(int i =0; i<activeMissile.size(); i++){
+            g2.setColor(activeMissile.get(i).getCurColor());
+            g2.draw(activeMissile.get(i));
+                   
+        }
     
+    }
     private void initializeCities(){
         city[0] = new City(25, 325, 6);
         city[1] = new City(200, 325, 4);
