@@ -190,7 +190,7 @@ public class RedYard extends JPanel{
             activeMissile.get(i).setAngle(Math.atan2(city[1].getCenterX() - activeMissile.get(i).getX()+MISSILE_WIDTH/2,
                         city[1].getBottom() - activeMissile.get(i).getY() + MISSILE_WIDTH/2));
             
-            
+            activeMissile.get(i).setTarget(activeMissile.get(i).getTarget());
         }
         
         /*if(!activeMissile.isEmpty()){
