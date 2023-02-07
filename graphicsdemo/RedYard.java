@@ -158,7 +158,6 @@ public class RedYard extends JPanel{
     
     public void update(){
         city[0].translate((int)deltaX,(int)deltaY);
-        repaint();
         
         // Change direction if city reaches boundaries
         if(city[0].getTop() < 0 || city[0].getBottom() > getHeight())
@@ -166,6 +165,14 @@ public class RedYard extends JPanel{
         if(city[0].getRight() > getWidth() || city[0].getLeft() < 0)
             deltaX *= -1.01;
         System.out.println("Left: " + city[0].getLeft() + " Top : " + city[0].getTop());
+        
+        // How to update the missiles
+        // Fine tuning needed to move toward city position
+        for(int i =0; i<activeMissile.size(); i++){
+            activeMissile.get(i).translate(city[0].getCenterX()/100, city[0].getCenterY()/100);
+        }
+        
+        repaint();
     }
 
 } // End of RedYard Class
