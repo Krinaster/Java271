@@ -86,10 +86,10 @@ public class City extends Polygon {
     }
     
     public int getCenterX(){
-        return getRight()+getLeft() / 2;
+        return (getRight()+getLeft())/2;
     }
     
     public int getCenterY(){
-        return getTop() + getBottom() / 2;
+        return (getTop() + getBottom()) / 2;
     }
 } // End of class
