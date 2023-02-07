@@ -19,7 +19,7 @@ public class GUI {
     private JFrame window;
     private JPanel leftPanel;
     private RedYard rightPanel;
-    private Timer tictoc;
+    private Timer tictoc, missileTimer;
     
     public enum Direction{UP,LEFT, RIGHT, DOWN};
     
@@ -45,6 +45,7 @@ public class GUI {
         
         // Create the timer
         tictoc = new Timer(1, new TimerListener());
+        missileTimer = new Timer(5, new missileListener());
 
         // Adding Panels and setting Frame visible
         window.add(leftPanel);
@@ -54,7 +55,10 @@ public class GUI {
         // Start the timer
         tictoc.start();
         
+        // Creating the missiles
         rightPanel.createMissiles();
+        
+        missileTimer.start();
     } // End of GUI class
     
     private class TextListener implements KeyListener {
@@ -119,6 +123,15 @@ public class GUI {
             rightPanel.update();
         }
         
+    }
+    
+    private class missileListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            rightPanel.updateMissiles();
+        }
+    
     }
     
 } // End of GUI class
