@@ -27,7 +27,7 @@ public class RedYard extends JPanel{
     private ArrayList<Missile> activeMissile = new ArrayList<>();
     private Random rand = new Random();
     
-    private final int MISSILE_WIDTH = 20;
+    private final int MISSILE_WIDTH = 10;
     private final int MISSILE_CHANGE_PER_LEVEL = 2;
     private final int INITIAL_NUMBER_OF_MISSILES = 3;
     
@@ -170,29 +170,40 @@ public class RedYard extends JPanel{
      public void createMissiles(){
         for(int i =0; i<INITIAL_NUMBER_OF_MISSILES+MISSILE_CHANGE_PER_LEVEL*curLevel; i++){
             int x = rand.nextInt(getWidth());
+            int target = rand.nextInt(city.length);
             activeMissile.add(new Missile( x , 5, MISSILE_WIDTH, MISSILE_WIDTH,
                     Math.atan2(city[0].getCenterX()-x+MISSILE_WIDTH/2,
                             city[0].getBottom()+MISSILE_WIDTH/2),
-                        20));
+                        curMissileNum++, target));
         }
     }
-     
-    public void updateMissiles(){
+    
+    public void updateMissiles() {
+        for(int i=0; i<activeMissile.size(); i++) {
+            activeMissile.get(i).translate((int)(deltaM*Math.sin(activeMissile.get(i).getAngle())),
+                                           (int)(deltaM*Math.cos(activeMissile.get(i).getAngle())));
+            activeMissile.get(i).setAngle(Math.atan2(city[activeMissile.get(i).getTarget()].getCenterX() - activeMissile.get(i).getX() + MISSILE_WIDTH/2,
+                                       city[activeMissile.get(i).getTarget()].getBottom() -
+                                              activeMissile.get(i).getY() + MISSILE_WIDTH/2));
+            
+        }
+        
+        System.out.println("CITYX: " + city[activeMissile.get(0).getTarget()].getCenterX());
+        System.out.println("MISSX: " + activeMissile.get(0).getX());
+    }
+
+
+    /*public void updateMissiles(){
         for(int i =0; i<activeMissile.size(); i++){
             activeMissile.get(i).translate((int)(deltaM*Math.sin(activeMissile.get(i).getAngle())),
                     (int)(deltaM*Math.cos(activeMissile.get(i).getAngle())));
-            
-            System.out.println("Bottom of City: " + city[0].getBottom());
-            System.out.println("Missile Y: " + activeMissile.get(i).getY());
-            System.out.println("X of city: " + city[0].getCenterX());
-            System.out.println("Missile X: " + activeMissile.get(i).getX());
-            
-            activeMissile.get(i).setAngle(Math.atan2(city[1].getCenterX() - activeMissile.get(i).getX()+MISSILE_WIDTH/2,
-                        city[1].getBottom() - activeMissile.get(i).getY() + MISSILE_WIDTH/2));
+                   
+            activeMissile.get(i).setAngle(Math.atan2(city[0].getCenterX() - activeMissile.get(i).getX()+MISSILE_WIDTH/2,
+                        city[activeMissile.get(i).getTarget()].getBottom() - activeMissile.get(i).getY() + MISSILE_WIDTH/2));
             
             activeMissile.get(i).setTarget(activeMissile.get(i).getTarget());
         }
-        
+      */  
         /*if(!activeMissile.isEmpty()){
             activeMissile.get(0).translate((int)(deltaM*Math.sin(activeMissile.get(0).getAngle())),
                     (int)(deltaM*Math.cos(activeMissile.get(0).getAngle())));
@@ -200,6 +211,6 @@ public class RedYard extends JPanel{
                         city[0].getBottom() - activeMissile.get(0).getY() + MISSILE_WIDTH));
         } // End of if statement
         */
-    }
+    
 
 } // End of RedYard Class
