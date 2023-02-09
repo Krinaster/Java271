@@ -1,4 +1,3 @@
-
 package graphicsdemo;
 
 import java.awt.Color;
@@ -45,7 +44,7 @@ public class GUI {
         
         // Create the timer
         tictoc = new Timer(1, new TimerListener());
-        missileTimer = new Timer(5, new missileListener());
+        missileTimer = new Timer(10, new missileListener());
 
         // Adding Panels and setting Frame visible
         window.add(leftPanel);
