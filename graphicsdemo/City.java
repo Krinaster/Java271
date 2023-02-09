@@ -1,15 +1,17 @@
-
-
 package graphicsdemo;
 
+import java.awt.Color;
 import java.awt.Polygon;
 
 
 public class City extends Polygon {
     
     private int segment;
+    private Color cityColor;
     
     public City(int x, int y, int l) {
+        cityColor = Color.MAGENTA;
+        
         npoints = 18;
         xpoints = new int[npoints];
         ypoints = new int[npoints];
@@ -76,5 +78,12 @@ public class City extends Polygon {
     public int getCenterY() {
         return (getTop() + getBottom()) / 2;
     }
+    
+    public Color getCityColor(){
+        return cityColor;
+    }
+    
+    public void setCityColor(Color c){
+        cityColor = c;
+    }
 }
-
