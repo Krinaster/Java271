@@ -106,11 +106,12 @@ public class RedYard extends JPanel{
         //for(City c: city)
         //    g2.fill(c);
         
-        g2.setColor(Color.GREEN);
+        g2.setColor(city[1].getCityColor());
         g2.fill(city[1]);
         // Rotate to draw the small city
         
         g2.rotate(theta, (int)(city[0].getRight() + city[0].getLeft())/2, (int)(city[0].getBottom() + city[0].getTop())/2);
+        g2.setColor(city[0].getCityColor());
         g2.fill(city[0]);
         g2.rotate(-theta, (int)(city[0].getRight() + city[0].getLeft())/2, (int)(city[0].getBottom() + city[0].getTop())/2);
         theta += .1;
@@ -122,6 +123,12 @@ public class RedYard extends JPanel{
             g2.setColor(activeMissile.get(i).getCurColor());
             g2.draw(activeMissile.get(i));
                    
+        }
+        
+        // Test for any collisions
+        for(int i =0; i<activeMissile.size(); i++){
+            if(activeMissile.get(i).intersects(city[0].getBounds()))
+                city[0].setCityColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
         }
     
     }
@@ -157,9 +164,9 @@ public class RedYard extends JPanel{
         
         // Change direction if city reaches boundaries
         if(city[0].getTop() < 0 || city[0].getBottom() > getHeight())
-            deltaY *= -1.09;
+            deltaY *= -1.001;
         if(city[0].getRight() > getWidth() || city[0].getLeft() < 0)
-            deltaX *= -1.09;
+            deltaX *= -1.001;
         System.out.println("Left: " + city[0].getLeft() + " Top : " + city[0].getTop());
         
         // How to update the missiles
@@ -186,6 +193,8 @@ public class RedYard extends JPanel{
                                        city[activeMissile.get(i).getTarget()].getBottom() -
                                               activeMissile.get(i).getY() + MISSILE_WIDTH/2));
             
+            // Turns rotating city into discoball
+            city[0].setCityColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
         }
         
         System.out.println("CITYX: " + city[activeMissile.get(0).getTarget()].getCenterX());
