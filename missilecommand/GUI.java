@@ -1,4 +1,3 @@
-
 package missilecommand;
 
 import javax.swing.JFrame;

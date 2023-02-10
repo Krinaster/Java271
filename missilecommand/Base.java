@@ -92,4 +92,8 @@ public class Base extends Polygon {
         return xpoints[10];
     }
     
+    public int valleyHeight(){
+        return ypoints[9];
+    }
+    
 } // End of Base
