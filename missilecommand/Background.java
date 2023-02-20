@@ -1,35 +1,58 @@
-
 package missilecommand;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import javax.swing.Timer;
 
 public class Background extends JPanel {
     
     City[] city = new City[6];
+    private ImageIcon Shooter;
+    private ArrayList<Missile> activeMissile = new ArrayList<>();
+    private ArrayList<Missile> shotMissile = new ArrayList<>();
+    private Random rand = new Random();
+    private Timer shootMissiles;
+    private int[] Ammo = new int[3];
+    
+    
+    private int curMissileNum = 10;
+    private int AmmoCount = 10;
     
     public Background(){
         super();
         setBackground(Color.BLACK);
+        Shooter = new ImageIcon("Shooter.png");
         
+        // Initializing Ammo
+        refillAmmo();
     }
 
     @Override
     public void paintComponent(Graphics g){
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         
-        // Drawing Rectangle
-        g2.setColor(Color.WHITE);
-        g2.fillRect(100,100,50,50);
-        g2.drawRect(100,200,50,50);
         
         // Drwaing Base and Coloring
         Base Base = new Base(getWidth(), getHeight());
         g2.setColor(Base.getBaseColor());
         g2.fill(Base);
+        
+        // Drawing Shooters
+        g2.drawImage(Shooter.getImage(),Base.hill1Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
+        g2.drawImage(Shooter.getImage(),Base.hill2Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
+        g2.drawImage(Shooter.getImage(),Base.hill3Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
+       
+         
+        // Test drawing Missile
+        // g2.draw(new Missile(0,0,50,50,0,0,0));
         
         // Drawing Test City
         // g2.setColor(Color.RED);
@@ -39,24 +62,127 @@ public class Background extends JPanel {
         // Will Draw Cities will default to 6 cities
         initializeCities(Base.valley1LeftBound(),Base.valley2LeftBound(), Base.valleyHeight());
         
-
+        // Sets cities to color Red
         g2.setColor(Color.RED);
         for(City c: city)
             g2.fill(c);
         
-    }
+
+        // Drawing missiles at top
+        for(int i =0; i<activeMissile.size(); i++){
+            g2.setColor(activeMissile.get(i).getCurColor());
+            g2.draw(activeMissile.get(i));
+            repaint();
+        }
+        
+        // Drawing clicked missiles
+        for(int i =0; i<shotMissile.size(); i++){
+            g2.setColor(shotMissile.get(i).getCurColor());
+            g2.draw(shotMissile.get(i));
+            repaint();
+        }
+        
+
+        
+        // Drawing Ammo
+        g2.setFont(new Font("Comic Sans", Font.PLAIN,50));
+        g2.setColor(Color.BLACK);
+        g2.drawString(" "+Ammo[0], Base.hill1Center(), Base.valleyHeight());
+        g2.drawString(" "+Ammo[1], Base.hill2Center(), Base.valleyHeight());
+        g2.drawString(" "+Ammo[2], Base.hill3Center(), Base.valleyHeight());
     
+        // Testing intersections
+        for(int i =0; i<shotMissile.size(); i++){
+            if(shotMissile.get(i).intersects(city[0].getBounds()))
+                city[0].setCityColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+        }
+    
+    }// End of paint component
+    
+    // Method that initializes the cities
     private void initializeCities(int xbound1, int xbound2, int ybound1){
         int w = getWidth();
         int h = getHeight();
-        int y = ybound1 - 40;
+        int citySize = w/256;
+        int y = ybound1 - (citySize*8);
         
-        city[0] = new City(xbound1,y,5);
-        city[1] = new City(xbound1+city[0].getCityLength(),y,5);
-        city[2] = new City(5,5,5);
-        city[3] = new City(5,5,5);
-        city[4] = new City(5,5,5);
-        city[5] = new City(5,5,5);
+        city[0] = new City(xbound1+5,y,citySize);
+        city[1] = new City(xbound1+city[0].getCityLength()+15,y,citySize);
+        city[2] = new City(xbound1+city[0].getCityLength()*2+25,y,citySize);
+        city[3] = new City(xbound2+5,y,citySize);
+        city[4] = new City(xbound2+city[3].getCityLength()+15,y,citySize);
+        city[5] = new City(xbound2+city[3].getCityLength()*2+25,y,citySize);
+    }
+    
+    // Method that gets the coordinates of a click
+    public void getCoordinates(int x, int y){
+        System.out.println("X: " + x + " Y: " + y);
+    }
+    
+    
+    // FYI
+    // This method needs an overhaul, but for right now it works fine
+    
+    // Method that shoots the missiles when you click
+    public void shootMissile(int x, int y){
+        // shotMissile.add(new Missile(50, 500, 20,20,Math.atan2(x-50,y-500),1,1));
+        
+        // Consider making the missiles relative compared to absolute location
+        if(x < getWidth()/3 && Ammo[0] >0){
+            shotMissile.add(new Missile(190,620,20,20,Math.atan2(x-200,y-620),1,1));
+            Ammo[0]--;
+            System.out.println(Ammo[0]);
+        }
+        else if(x > getWidth()/3 && x<(2*getWidth())/3 && Ammo[1] > 0){
+            shotMissile.add(new Missile(getWidth()/2,620,20,20,Math.atan2(x-(getWidth()/2),y-620),1,1));
+            Ammo[1]--;
+        }
+        else if(x > (2*getWidth())/3 && Ammo[2] > 0){
+            shotMissile.add(new Missile(1370,620,20,20,Math.atan2(x-1370,y-620),1,1));
+            Ammo[2]--;
+        }
+        // Look into timer so that when I shoot the missile is automatically translates itself to the target
+        // and blow up
+        
+        // shotMissile.get(0).translate(activeMissile.get(0).getTarget(), activeMissile.get(0).getTarget());
+    }
+   
+    // Method that moves the shooter missiles
+    public void updateShotMissile(){
+        int deltaX = 5, deltaY = 5;
+        for(int i=0; i<shotMissile.size(); i++){
+            shotMissile.get(i).translate((int)(deltaX*Math.sin(shotMissile.get(i).getAngle())),
+                    (int)(deltaY*Math.cos(shotMissile.get(i).getAngle())));
+        }
+    
+    } 
+    
+    // Method for reilling shooter Ammo
+    public void refillAmmo(){
+        for(int i =0; i<Ammo.length; i++)
+            Ammo[i] = AmmoCount;
+    }
+    
+    // Method that creates the alien missiles
+    public void createMissiles(int n){
+        for(int i =0; i<n; i++){
+            int x = rand.nextInt(getWidth());
+            int target = rand.nextInt(city.length);
+            activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
+            // Need to figure out equation so that angle is not messed up so as that I can use this formula to calculate angle
+            // Math.atan2(city[0].getCenterX()-x+10,city[0].getBottom()+10)
+        }
+    
     }
 
+    // Method that translates the alien missiles
+    public void updateAlienMissile(){
+        int deltaX = 5, deltaY = 5;
+        for(int i=0; i<activeMissile.size(); i++){
+            activeMissile.get(i).translate((int)(deltaX*Math.sin(activeMissile.get(i).getAngle())),
+                    (int)(deltaY*Math.cos(activeMissile.get(i).getAngle())));
+        }
+    
+    }
+    
 } // End of background

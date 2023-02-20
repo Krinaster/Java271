@@ -1,4 +1,3 @@
-
 package missilecommand;
 
 import java.awt.Color;
@@ -96,4 +95,23 @@ public class Base extends Polygon {
         return ypoints[9];
     }
     
+    public int hillLength(){
+        return xpoints[4]-xpoints[3];
+    }
+    
+    public int hillHeight(){
+        return 100;
+    }
+    
+    public int hill1Center(){
+        return xpoints[3];
+    }
+    
+    public int hill2Center(){
+        return xpoints[7];
+    }
+    
+    public int hill3Center(){
+        return xpoints[11];
+    }
 } // End of Base
