@@ -63,7 +63,7 @@ public class Background extends JPanel {
         initializeCities(Base.valley1LeftBound(),Base.valley2LeftBound(), Base.valleyHeight());
         
         // Sets cities to color Red
-        g2.setColor(Color.RED);
+        g2.setColor(city[0].getCityColor());
         for(City c: city)
             g2.fill(c);
         
@@ -95,6 +95,9 @@ public class Background extends JPanel {
         for(int i =0; i<shotMissile.size(); i++){
             if(shotMissile.get(i).intersects(city[0].getBounds()))
                 city[0].setCityColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+            System.out.println(city[0].getBounds());
+            System.out.println(shotMissile.get(i).x + " " + shotMissile.get(i).x);
+           
         }
     
     }// End of paint component
