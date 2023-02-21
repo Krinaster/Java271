@@ -20,7 +20,6 @@ public class Background extends JPanel {
     private Timer shootMissiles;
     private int[] Ammo = new int[3];
     
-    
     private int curMissileNum = 10;
     private int AmmoCount = 10;
     
@@ -92,10 +91,11 @@ public class Background extends JPanel {
         g2.drawString(" "+Ammo[2], Base.hill3Center(), Base.valleyHeight());
     
         // Testing intersections
-        for(int i =0; i<shotMissile.size(); i++){
-            if(shotMissile.get(i).intersects(city[0].getBounds()))
-                shotMissile.get(i).setCurColor(Color.red);
-                
+        for(int i =0; i<activeMissile.size(); i++){
+            if(activeMissile.get(i).intersects(city[0].getBounds())){
+                activeMissile.get(i).setCurColor(Color.red);
+                city[0].setCityColor(new Color(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256)));
+            }
             //System.out.println("City Bounds" + city[0].getBounds());
             //System.out.println(shotMissile.get(i).getLocation());
            
@@ -111,16 +111,16 @@ public class Background extends JPanel {
         // Valley2LeftBound 918
         // valleyHeight 761
         int w = 1584;
-        int h = 705;
-        int citySize = 7;
+        int h = 713;
+        int citySize = 6;
         
-        city[0] = new City((9*w)/44, h ,citySize);
-        city[1] = new City(city[0].getRight()+5,h,citySize);
-        city[2] = new City(city[1].getRight()+5,h,citySize);
-        city[3] = new City(918, h, citySize);
-        city[4] = new City(city[3].getRight()+5,h, citySize);
-        city[5] = new City(city[4].getRight()+5,h, citySize);
-
+        city[0] = new City((9*w)/44+2, h ,citySize);
+        city[1] = new City(city[0].getRight()+15,h,citySize);
+        city[2] = new City(city[1].getRight()+15,h,citySize);
+        city[3] = new City(920, h, citySize);
+        city[4] = new City(city[3].getRight()+15,h, citySize);
+        city[5] = new City(city[4].getRight()+15,h, citySize);
+        
     }
     
     // Method that gets the coordinates of a click
@@ -177,7 +177,7 @@ public class Background extends JPanel {
         for(int i =0; i<n; i++){
             int x = rand.nextInt(getWidth());
             int target = rand.nextInt(city.length);
-            activeMissile.add(new Missile(x, 5, 20,20,180, curMissileNum++, target));
+            activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
             // Need to figure out equation so that angle is not messed up so as that I can use this formula to calculate angle
             // Math.atan2(city[0].getCenterX()-x+10,city[0].getBottom()+10)
         }
