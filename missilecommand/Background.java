@@ -177,7 +177,8 @@ public class Background extends JPanel {
         for(int i =0; i<n; i++){
             int x = rand.nextInt(getWidth());
             int target = rand.nextInt(city.length);
-            activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
+            // activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
+            activeMissile.add(new Missile(x, 5, 20,20, Math.atan2(city[target].getCenterX()-x, city[target].getCenterY()), curMissileNum++, target));
             // Need to figure out equation so that angle is not messed up so as that I can use this formula to calculate angle
             // Math.atan2(city[0].getCenterX()-x+10,city[0].getBottom()+10)
         }
@@ -190,6 +191,7 @@ public class Background extends JPanel {
         for(int i=0; i<activeMissile.size(); i++){
             activeMissile.get(i).translate((int)(deltaX*Math.sin(activeMissile.get(i).getAngle())),
                     (int)(deltaY*Math.cos(activeMissile.get(i).getAngle())));
+            // Update the angle as the missile moves
         }
     
     }
