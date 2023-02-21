@@ -29,6 +29,8 @@ public class Background extends JPanel {
         setBackground(Color.BLACK);
         Shooter = new ImageIcon("Shooter.png");
         
+        initializeCities();
+        
         // Initializing Ammo
         refillAmmo();
     }
@@ -39,18 +41,18 @@ public class Background extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         
-        
         // Drwaing Base and Coloring
         Base Base = new Base(getWidth(), getHeight());
         g2.setColor(Base.getBaseColor());
         g2.fill(Base);
         
+
+
         // Drawing Shooters
         g2.drawImage(Shooter.getImage(),Base.hill1Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
         g2.drawImage(Shooter.getImage(),Base.hill2Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
         g2.drawImage(Shooter.getImage(),Base.hill3Center(),getHeight()-230,Base.hillLength(),Base.hillHeight(), null);
        
-         
         // Test drawing Missile
         // g2.draw(new Missile(0,0,50,50,0,0,0));
         
@@ -60,12 +62,10 @@ public class Background extends JPanel {
         
         
         // Will Draw Cities will default to 6 cities
-        initializeCities(Base.valley1LeftBound(),Base.valley2LeftBound(), Base.valleyHeight());
-        
-        // Sets cities to color Red
-        g2.setColor(city[0].getCityColor());
+        g2.setColor(Color.RED);
         for(City c: city)
             g2.fill(c);
+
         
 
         // Drawing missiles at top
@@ -94,27 +94,33 @@ public class Background extends JPanel {
         // Testing intersections
         for(int i =0; i<shotMissile.size(); i++){
             if(shotMissile.get(i).intersects(city[0].getBounds()))
-                city[0].setCityColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            System.out.println(city[0].getBounds());
-            System.out.println(shotMissile.get(i).x + " " + shotMissile.get(i).x);
+                shotMissile.get(i).setCurColor(Color.red);
+                
+            //System.out.println("City Bounds" + city[0].getBounds());
+            //System.out.println(shotMissile.get(i).getLocation());
            
         }
     
     }// End of paint component
     
     // Method that initializes the cities
-    private void initializeCities(int xbound1, int xbound2, int ybound1){
-        int w = getWidth();
-        int h = getHeight();
-        int citySize = w/256;
-        int y = ybound1 - (citySize*8);
+    private void initializeCities(){
+        // getWidth = 1584
+        // getHeight = 861
+        // Valley1LeftBound 324
+        // Valley2LeftBound 918
+        // valleyHeight 761
+        int w = 1584;
+        int h = 705;
+        int citySize = 7;
         
-        city[0] = new City(xbound1+5,y,citySize);
-        city[1] = new City(xbound1+city[0].getCityLength()+15,y,citySize);
-        city[2] = new City(xbound1+city[0].getCityLength()*2+25,y,citySize);
-        city[3] = new City(xbound2+5,y,citySize);
-        city[4] = new City(xbound2+city[3].getCityLength()+15,y,citySize);
-        city[5] = new City(xbound2+city[3].getCityLength()*2+25,y,citySize);
+        city[0] = new City((9*w)/44, h ,citySize);
+        city[1] = new City(city[0].getRight()+5,h,citySize);
+        city[2] = new City(city[1].getRight()+5,h,citySize);
+        city[3] = new City(918, h, citySize);
+        city[4] = new City(city[3].getRight()+5,h, citySize);
+        city[5] = new City(city[4].getRight()+5,h, citySize);
+
     }
     
     // Method that gets the coordinates of a click
@@ -171,7 +177,7 @@ public class Background extends JPanel {
         for(int i =0; i<n; i++){
             int x = rand.nextInt(getWidth());
             int target = rand.nextInt(city.length);
-            activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
+            activeMissile.add(new Missile(x, 5, 20,20,180, curMissileNum++, target));
             // Need to figure out equation so that angle is not messed up so as that I can use this formula to calculate angle
             // Math.atan2(city[0].getCenterX()-x+10,city[0].getBottom()+10)
         }
