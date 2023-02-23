@@ -4,7 +4,7 @@
 // Last Modified    : 03/21/2018
 // Description      : This is the MazeLoader file for Math 271 where students
 //                    will implement the recursive routine to "solve" the maze.
-package mazeloader;
+package mazemain;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -181,12 +181,32 @@ public class MazeLoader {
         boolean foundSolution = false;
         // STUDENTS FINISH CODE HERE
         grid[p.x][p.y].setBackground(PATH_COLOR);
-        System.out.println(grid[p.x+1][p.y]);
-        System.out.println(grid[COL-1][p.y]);
-        if(grid[p.x+1][p.y] == grid[ROW-1][p.y])
+        
+        /*if(p.x-1 == 0 && grid[p.x-1][p.y].getBackground().equals(OPEN_COLOR))
             foundSolution = true;
-        else if(grid[p.x-1][p.y].equals(grid[0][p.y]))
+        else if(p.x+1 == ROW-1 && grid[p.x+1][p.y].getBackground().equals(OPEN_COLOR))
             foundSolution = true;
+        else if(p.y+1 == COL-1 && grid[p.x][p.y+1].getBackground().equals(OPEN_COLOR))
+            foundSolution = true;
+        else if(p.y-1 == 0 && grid[p.x][p.y-1].getBackground().equals(OPEN_COLOR))
+            foundSolution = true;
+        else{
+            if((grid[p.x+1][p.y].getBackground().equals(OPEN_COLOR))){
+                return findPath(new Point(p.x+1,p.y));
+            }
+            if((grid[p.x-1][p.y].getBackground().equals(OPEN_COLOR) )){
+                return findPath(new Point(p.x-1,p.y));
+            }
+            if((grid[p.x][p.y+1].getBackground().equals(OPEN_COLOR))){
+                return findPath(new Point(p.x, p.y+1));
+            }
+            if((grid[p.x][p.y-1].getBackground().equals(OPEN_COLOR))){
+                return findPath(new Point(p.x, p.y-1));
+            }
+            grid[p.x][p.y].setBackground(BAD_PATH_COLOR);
+            foundSolution = false;
+            return findPath(p);
+        }*/
         return foundSolution;
     }
     
