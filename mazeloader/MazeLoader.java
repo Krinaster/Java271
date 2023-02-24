@@ -4,7 +4,7 @@
 // Last Modified    : 03/21/2018
 // Description      : This is the MazeLoader file for Math 271 where students
 //                    will implement the recursive routine to "solve" the maze.
-package mazemain;
+package mazeloader;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -183,82 +183,31 @@ public class MazeLoader {
         
         boolean visited[][] = new boolean[ROW][COL];
         int x = p.x, y= p.y;
-        
         if(grid[x][y].getBackground()==OPEN_COLOR&&(x==0||x==ROW-1||y==0||y==COL-1)){
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = true;
             }
         if(grid[x][y+1].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                p.y++;
-                foundSolution = findPath(p);
+                foundSolution = findPath(new Point(p.x,++p.y));
             }
         if(grid[x][y-1].getBackground() == OPEN_COLOR && !foundSolution){
-                grid[p.x][p.y].setBackground(PATH_COLOR);
-                p.y--;
-                foundSolution = findPath(p);
+               grid[p.x][p.y].setBackground(PATH_COLOR); 
+               foundSolution = findPath(new Point(p.x,--p.y));
             }
         if(grid[x+1][y].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                p.x++;
-                foundSolution = findPath(p);
+                foundSolution = findPath(new Point(++p.x, p.y));
             }
         if(grid[x-1][y].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                p.x--;
-                foundSolution = findPath(p);
+                foundSolution = findPath(new Point(--p.x, p.y));
             }
-        if(!foundSolution)
+        if(!foundSolution){
             grid[x][y].setBackground(BAD_PATH_COLOR);
+            return false;
+        }
             
-            /*if(grid[x][y].getBackground() ==  BAD_PATH_COLOR){
-                if(grid[x][y+1].getBackground() == PATH_COLOR){
-                    p.y++;
-                    return findPath(p);
-                }
-                if(grid[x][y-1].getBackground() == PATH_COLOR){
-                    p.y--;
-                    return findPath(p);
-                }
-                if(grid[x+1][y].getBackground() == PATH_COLOR){
-                    p.x++;
-                    return findPath(p);
-                }
-                if(grid[x+1][y].getBackground() == PATH_COLOR){
-                    p.y--;
-                    return findPath(p);
-                }*/
-            
-            // findPath(p);
-            
-        
-        //grid[p.x][p.y].setBackground(PATH_COLOR);
-        /*
-        if(p.x-1 == 0 && grid[p.x-1][p.y].getBackground().equals(OPEN_COLOR))
-            foundSolution = true;
-        else if(p.x+1 == ROW-1 && grid[p.x+1][p.y].getBackground().equals(OPEN_COLOR))
-            foundSolution = true;
-        else if(p.y+1 == COL-1 && grid[p.x][p.y+1].getBackground().equals(OPEN_COLOR))
-            foundSolution = true;
-        else if(p.y-1 == 0 && grid[p.x][p.y-1].getBackground().equals(OPEN_COLOR))
-            foundSolution = true;
-        else{
-            if((grid[p.x+1][p.y].getBackground().equals(OPEN_COLOR))){
-                return findPath(new Point(p.x+1,p.y));
-            }
-            if((grid[p.x-1][p.y].getBackground().equals(OPEN_COLOR) )){
-                return findPath(new Point(p.x-1,p.y));
-            }
-            if((grid[p.x][p.y+1].getBackground().equals(OPEN_COLOR))){
-                return findPath(new Point(p.x, p.y+1));
-            }
-            if((grid[p.x][p.y-1].getBackground().equals(OPEN_COLOR))){
-                return findPath(new Point(p.x, p.y-1));
-            }
-            grid[p.x][p.y].setBackground(BAD_PATH_COLOR);
-            foundSolution = false;
-            return findPath(p);
-        }*/
         
         return foundSolution;
     }
