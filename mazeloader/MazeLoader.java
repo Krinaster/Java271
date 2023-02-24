@@ -4,7 +4,7 @@
 // Last Modified    : 03/21/2018
 // Description      : This is the MazeLoader file for Math 271 where students
 //                    will implement the recursive routine to "solve" the maze.
-package mazeloader;
+package mazemain;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -51,8 +51,6 @@ public class MazeLoader {
     private JFileChooser mazeFile;
     private String lastDirectory = null;
     
-    
-
     /** Default constructor - initializes all private values
      * 
      */
@@ -190,31 +188,50 @@ public class MazeLoader {
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = true;
             }
-        else{
-            visited[x][y] = true;
-            if(grid[x][y+1].getBackground() == OPEN_COLOR){
+        if(grid[x][y+1].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
                 p.y++;
-                return findPath(p);
+                foundSolution = findPath(p);
             }
-            if(grid[x][y-1].getBackground() == OPEN_COLOR){
+        if(grid[x][y-1].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
                 p.y--;
-                return findPath(p);
+                foundSolution = findPath(p);
             }
-            if(grid[x+1][y].getBackground() == OPEN_COLOR){
+        if(grid[x+1][y].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
                 p.x++;
-                return findPath(p);
+                foundSolution = findPath(p);
             }
-            if(grid[x-1][y].getBackground() == OPEN_COLOR){
+        if(grid[x-1][y].getBackground() == OPEN_COLOR && !foundSolution){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
                 p.x--;
-                return findPath(p);
+                foundSolution = findPath(p);
             }
+        if(!foundSolution)
             grid[x][y].setBackground(BAD_PATH_COLOR);
+            
+            /*if(grid[x][y].getBackground() ==  BAD_PATH_COLOR){
+                if(grid[x][y+1].getBackground() == PATH_COLOR){
+                    p.y++;
+                    return findPath(p);
+                }
+                if(grid[x][y-1].getBackground() == PATH_COLOR){
+                    p.y--;
+                    return findPath(p);
+                }
+                if(grid[x+1][y].getBackground() == PATH_COLOR){
+                    p.x++;
+                    return findPath(p);
+                }
+                if(grid[x+1][y].getBackground() == PATH_COLOR){
+                    p.y--;
+                    return findPath(p);
+                }*/
+            
             // findPath(p);
-        }
+            
+        
         //grid[p.x][p.y].setBackground(PATH_COLOR);
         /*
         if(p.x-1 == 0 && grid[p.x-1][p.y].getBackground().equals(OPEN_COLOR))
@@ -245,6 +262,7 @@ public class MazeLoader {
         
         return foundSolution;
     }
+    
     
     /** ReloadCurrentMaze class listens to menu clicks - simply
      *  wipes the current state of the maze.
