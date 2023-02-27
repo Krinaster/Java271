@@ -4,7 +4,7 @@
 // Last Modified    : 03/21/2018
 // Description      : This is the MazeLoader file for Math 271 where students
 //                    will implement the recursive routine to "solve" the maze.
-package mazeloader;
+package mazemain;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -14,7 +14,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,12 +28,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 /** This is the main class that defines the window to load the maze
  * 
  * @author collindw
  */
+
 public class MazeLoader {
     
     private JFrame window;
@@ -51,6 +57,7 @@ public class MazeLoader {
     private JFileChooser mazeFile;
     private String lastDirectory = null;
     
+    boolean visited[][] = new boolean[ROW][COL];
     /** Default constructor - initializes all private values
      * 
      */
@@ -59,7 +66,6 @@ public class MazeLoader {
         start = new Point();
         allowMazeUpdate = true;
         timer = new Timer(100, new TimerListener());
-        
         // Create the maze window
         window = new JFrame("Maze Program");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -181,38 +187,36 @@ public class MazeLoader {
         boolean foundSolution = false;
         // STUDENTS FINISH CODE HERE
         
-        boolean visited[][] = new boolean[ROW][COL];
+
         int x = p.x, y= p.y;
         if(grid[x][y].getBackground()==OPEN_COLOR&&(x==0||x==ROW-1||y==0||y==COL-1)){
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = true;
             }
-        if(grid[x][y+1].getBackground() == OPEN_COLOR && !foundSolution){
+        if(grid[x][y+1].getBackground() == OPEN_COLOR && foundSolution == false){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                foundSolution = findPath(new Point(p.x,++p.y));
+                findPath(new Point(p.x,++p.y));
             }
-        if(grid[x][y-1].getBackground() == OPEN_COLOR && !foundSolution){
+        if(grid[x][y-1].getBackground() == OPEN_COLOR && foundSolution == false){
                grid[p.x][p.y].setBackground(PATH_COLOR); 
-               foundSolution = findPath(new Point(p.x,--p.y));
+               findPath(new Point(p.x,--p.y));
             }
-        if(grid[x+1][y].getBackground() == OPEN_COLOR && !foundSolution){
+        if(grid[x+1][y].getBackground() == OPEN_COLOR && foundSolution == false){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                foundSolution = findPath(new Point(++p.x, p.y));
+                findPath(new Point(++p.x, p.y));
             }
-        if(grid[x-1][y].getBackground() == OPEN_COLOR && !foundSolution){
+        if(grid[x-1][y].getBackground() == OPEN_COLOR && foundSolution == false){
                 grid[p.x][p.y].setBackground(PATH_COLOR);
-                foundSolution = findPath(new Point(--p.x, p.y));
+                findPath(new Point(--p.x, p.y));
             }
-        if(!foundSolution){
+        if(foundSolution == false){
             grid[x][y].setBackground(BAD_PATH_COLOR);
             return false;
-        }
-            
-        
+        }      
+        // visited[p.x][p.y] = true;
         return foundSolution;
     }
-    
-    
+
     /** ReloadCurrentMaze class listens to menu clicks - simply
      *  wipes the current state of the maze.
      */
@@ -236,10 +240,47 @@ public class MazeLoader {
     private class LoadMazeFromFile implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(window, "Feature not yet implemented",
-                    "Extra Credit #2", JOptionPane.WARNING_MESSAGE);
+        public void actionPerformed(ActionEvent e){
+
+            
+            // Basically setting up the JFileChooser
+            // And putting a txt file filter on the JFileChooser
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter= new FileNameExtensionFilter("Text Files", "txt");
+            chooser.setFileFilter(filter);
+            chooser.showOpenDialog(menu);
+            
+            // Then figure out how to close the old program
+            
+            // Storing file selected from JFileChooser
+            // Then storing the maze.txt file and deleting that while
+            // and replacing it with an empty maze.txt file
+            // That will copy the selected file's contents into it
+            File selectedFile = chooser.getSelectedFile();
+            File mazeFile = new File("maze.txt");
+            mazeFile.delete();
+            
+            // The blank copy mazeFile we are copying to
+            File newMazeFile = new File("maze.txt");
+            
+            // Try Catch Block that is trying to copy the selectedFiles
+            // Contents into the maze.txt file
+            
+            try{
+            Files.copy(selectedFile.toPath(), newMazeFile.toPath());
+                System.out.println("File Copy Successful");
+            }
+            catch(IOException err){
+                err.printStackTrace();
+                System.out.println("File Copy Unsuccessful");
+            }
+            
+            // selectedFile.renameTo(new File("maze.txt"));
+            // System.exit(0);
+            new MazeLoader();
+
         }
+    
     } // end of LoadMazeFromFile class
     
     /** TimerListener class - Extra credit for students: instead of simply
@@ -258,7 +299,7 @@ public class MazeLoader {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            
         }
     }
 }
