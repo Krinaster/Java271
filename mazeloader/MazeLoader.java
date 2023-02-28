@@ -186,9 +186,48 @@ public class MazeLoader {
     public boolean findPath(Point p)  {
         boolean foundSolution = false;
         // STUDENTS FINISH CODE HERE
+        int x = p.x, y=p.y;
+        int left = y-1, right = y+1, up = x-1, down = x+1;
         
-
-        int x = p.x, y= p.y;
+        
+        
+        if(grid[x][left].getBackground()==OPEN_COLOR && left==0){
+            grid[x][left].setBackground(PATH_COLOR);
+            foundSolution = true;
+        }
+        if(grid[x][right].getBackground() == OPEN_COLOR && right==COL-1){
+            grid[x][right].setBackground(PATH_COLOR);
+            foundSolution = true;
+        }
+        if(grid[up][y].getBackground() == OPEN_COLOR && up == 0){
+            grid[up][y].setBackground(PATH_COLOR);
+            foundSolution = true;
+        }
+        if(grid[down][y].getBackground() == OPEN_COLOR && down == ROW-1){
+            grid[down][y].setBackground(PATH_COLOR);
+            foundSolution = true;
+        }
+        if(grid[x][left].getBackground() == OPEN_COLOR && !foundSolution){
+            grid[x][y].setBackground(PATH_COLOR);
+            foundSolution = findPath(new Point(x,left));
+        }
+        if(grid[x][right].getBackground() == OPEN_COLOR && !foundSolution){
+            grid[x][y].setBackground(PATH_COLOR);
+            foundSolution = findPath(new Point(x,right));
+        }
+        if(grid[up][y].getBackground() == OPEN_COLOR && !foundSolution){
+            grid[x][y].setBackground(PATH_COLOR);
+            foundSolution = findPath(new Point(up,y));
+        }    
+        if(grid[down][y].getBackground() == OPEN_COLOR && !foundSolution){
+            grid[x][y].setBackground(PATH_COLOR);
+            foundSolution = findPath(new Point(down,y));
+        }
+        if(!foundSolution)
+            grid[x][y].setBackground(BAD_PATH_COLOR);
+        
+        
+        /*int x = p.x, y= p.y;
         if(grid[x][y].getBackground()==OPEN_COLOR&&(x==0||x==ROW-1||y==0||y==COL-1)){
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = true;
@@ -213,7 +252,7 @@ public class MazeLoader {
             grid[x][y].setBackground(BAD_PATH_COLOR);
             return false;
         }      
-        // visited[p.x][p.y] = true;
+        // visited[p.x][p.y] = true;*/
         return foundSolution;
     }
 
@@ -243,9 +282,14 @@ public class MazeLoader {
         public void actionPerformed(ActionEvent e){
 
             // Removes the old grid
-            for(int i =0; i<grid.length; i++)
-                for(int j=0; j<grid[i].length; j++)
-                    window.remove(grid[i][j]);
+            try{
+                for(int i =0; i<grid.length; i++)
+                    for(int j=0; j<grid[i].length; j++)
+                        window.remove(grid[i][j]);
+            }
+            catch(NullPointerException errrr){
+            
+            }
             // Basically setting up the JFileChooser
             // And putting a txt file filter on the JFileChooser
             JFileChooser chooser = new JFileChooser();
