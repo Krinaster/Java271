@@ -31,8 +31,8 @@ public class GUI {
         window.addMouseListener(new ClickListener());
         
         // Creating Timers
-        shooterTimer = new Timer(25, new shotMissileListener());
-        missileTimer = new Timer(50, new alienMissileListener());
+        shooterTimer = new Timer(10, new shotMissileListener());
+        missileTimer = new Timer(25, new alienMissileListener());
         
         // Adding Panels
         window.add(panel);

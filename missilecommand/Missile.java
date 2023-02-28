@@ -1,4 +1,3 @@
-
 package missilecommand;
 
 import java.awt.Color;
