@@ -242,7 +242,10 @@ public class MazeLoader {
         @Override
         public void actionPerformed(ActionEvent e){
 
-            
+            // Removes the old grid
+            for(int i =0; i<grid.length; i++)
+                for(int j=0; j<grid[i].length; j++)
+                    window.remove(grid[i][j]);
             // Basically setting up the JFileChooser
             // And putting a txt file filter on the JFileChooser
             JFileChooser chooser = new JFileChooser();
@@ -274,10 +277,47 @@ public class MazeLoader {
                 err.printStackTrace();
                 System.out.println("File Copy Unsuccessful");
             }
-            
-            // selectedFile.renameTo(new File("maze.txt"));
-            // System.exit(0);
-            new MazeLoader();
+        
+            // This is copy and pasted, just remakes the JPanel
+            // and makes it visually nice
+            try {
+                fileToRead = new Scanner(new File("maze.txt"));
+                ROW = fileToRead.nextInt();
+                COL = fileToRead.nextInt();
+            }
+            catch(FileNotFoundException errr) {
+                JOptionPane.showMessageDialog(window,"Default maze not found. " +
+                    "\nSelect a maze to solve from the menu," +
+                    "\nor rename maze to maze.txt", "Error", JOptionPane.ERROR_MESSAGE);
+                allowMazeUpdate = false;
+            }
+
+            if(allowMazeUpdate) {
+            // Now establish the Layout - appropriate to the grid size
+                window.setLayout(new GridLayout(ROW, COL));
+                grid= new JPanel[ROW][COL];
+                data = fileToRead.nextLine();
+                for(int i=0; i<ROW; i++) {
+                    data = fileToRead.nextLine();
+                    for(int j=0; j<COL; j++) {
+                        grid[i][j] = new JPanel();
+                        grid[i][j].setName("" + i + ":" + j);
+                        if(data.charAt(j) == '*') 
+                            grid[i][j].setBackground(WALL_COLOR);
+					// Do not add a mouse listener to the border square
+                        else if(i != 0 && j != 0 && i != COL-1 && j != ROW-1) {
+						grid[i][j].setBackground(OPEN_COLOR);
+						grid[i][j].addMouseListener(new MazeListener());
+                    }
+					else // This should be the exit(s) on the maze
+						grid[i][j].setBackground(OPEN_COLOR);
+					
+                        window.add(grid[i][j]);
+                }
+            }
+                fileToRead.close();
+                window.pack();
+            }
 
         }
     
