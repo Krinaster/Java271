@@ -14,11 +14,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -56,8 +55,9 @@ public class MazeLoader {
     private Timer timer;
     private JFileChooser mazeFile;
     private String lastDirectory = null;
-    
-    boolean visited[][] = new boolean[ROW][COL];
+    private ArrayList<Point> solutionArray = new ArrayList<>();
+    private int count = 0, timerCount = 0;
+
     /** Default constructor - initializes all private values
      * 
      */
@@ -65,7 +65,8 @@ public class MazeLoader {
         // Intialize other "stuff"
         start = new Point();
         allowMazeUpdate = true;
-        timer = new Timer(100, new TimerListener());
+        timer = new Timer(50, new TimerListener());
+        
         // Create the maze window
         window = new JFrame("Maze Program");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,7 +85,7 @@ public class MazeLoader {
                     "\nor rename maze to maze.txt", "Error", JOptionPane.ERROR_MESSAGE);
             allowMazeUpdate = false;
         }
-
+        
         if(allowMazeUpdate) {
             // Now establish the Layout - appropriate to the grid size
             window.setLayout(new GridLayout(ROW, COL));
@@ -132,6 +133,8 @@ public class MazeLoader {
         window.setResizable(false);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        
+        
     }
     
     /** MazeListener class reacts to mouse presses - only when the current
@@ -161,7 +164,9 @@ public class MazeLoader {
                     JOptionPane.showMessageDialog(window,"Cannot exit maze.");
                 else
                     JOptionPane.showMessageDialog(window, "Maze Exited!");
+                
             }
+            
         }
 
         @Override
@@ -189,24 +194,29 @@ public class MazeLoader {
         int x = p.x, y=p.y;
         int left = y-1, right = y+1, up = x-1, down = x+1;
         
-        
-        
+        // Base Cases
         if(grid[x][left].getBackground()==OPEN_COLOR && left==0){
+            grid[x][y].setBackground(PATH_COLOR);
             grid[x][left].setBackground(PATH_COLOR);
             foundSolution = true;
         }
         if(grid[x][right].getBackground() == OPEN_COLOR && right==COL-1){
+               grid[x][y].setBackground(PATH_COLOR);
             grid[x][right].setBackground(PATH_COLOR);
             foundSolution = true;
         }
         if(grid[up][y].getBackground() == OPEN_COLOR && up == 0){
+               grid[x][y].setBackground(PATH_COLOR);
             grid[up][y].setBackground(PATH_COLOR);
             foundSolution = true;
         }
         if(grid[down][y].getBackground() == OPEN_COLOR && down == ROW-1){
+               grid[x][y].setBackground(PATH_COLOR);
             grid[down][y].setBackground(PATH_COLOR);
             foundSolution = true;
         }
+        
+        // Checking Nearby locations for free square
         if(grid[x][left].getBackground() == OPEN_COLOR && !foundSolution){
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = findPath(new Point(x,left));
@@ -223,36 +233,32 @@ public class MazeLoader {
             grid[x][y].setBackground(PATH_COLOR);
             foundSolution = findPath(new Point(down,y));
         }
+        
+        // If bad path, color square red
         if(!foundSolution)
             grid[x][y].setBackground(BAD_PATH_COLOR);
         
         
-        /*int x = p.x, y= p.y;
-        if(grid[x][y].getBackground()==OPEN_COLOR&&(x==0||x==ROW-1||y==0||y==COL-1)){
-            grid[x][y].setBackground(PATH_COLOR);
-            foundSolution = true;
-            }
-        if(grid[x][y+1].getBackground() == OPEN_COLOR && foundSolution == false){
-                grid[p.x][p.y].setBackground(PATH_COLOR);
-                findPath(new Point(p.x,++p.y));
-            }
-        if(grid[x][y-1].getBackground() == OPEN_COLOR && foundSolution == false){
-               grid[p.x][p.y].setBackground(PATH_COLOR); 
-               findPath(new Point(p.x,--p.y));
-            }
-        if(grid[x+1][y].getBackground() == OPEN_COLOR && foundSolution == false){
-                grid[p.x][p.y].setBackground(PATH_COLOR);
-                findPath(new Point(++p.x, p.y));
-            }
-        if(grid[x-1][y].getBackground() == OPEN_COLOR && foundSolution == false){
-                grid[p.x][p.y].setBackground(PATH_COLOR);
-                findPath(new Point(--p.x, p.y));
-            }
-        if(foundSolution == false){
-            grid[x][y].setBackground(BAD_PATH_COLOR);
-            return false;
-        }      
-        // visited[p.x][p.y] = true;*/
+        if(foundSolution){
+            solutionArray.add(new Point(x,y));
+        }
+        
+        timerCount = solutionArray.size()-1;
+        
+        // Unedit this to get the timer
+        // Very rushed and works very basically
+        
+        /*
+        if(foundSolution){
+        for(int i=0; i<ROW; i++)
+            for(int j=0; j<COL; j++)
+                if(grid[i][j].getBackground().equals(PATH_COLOR) ||
+                    grid[i][j].getBackground().equals(BAD_PATH_COLOR))
+                        grid[i][j].setBackground(OPEN_COLOR);
+        }
+        */
+        //timer.start();
+
         return foundSolution;
     }
 
@@ -280,76 +286,87 @@ public class MazeLoader {
 
         @Override
         public void actionPerformed(ActionEvent e){
-
-            // Removes the old grid
-            try{
-                for(int i =0; i<grid.length; i++)
-                    for(int j=0; j<grid[i].length; j++)
-                        window.remove(grid[i][j]);
-            }
-            catch(NullPointerException errrr){
             
-            }
-            // Basically setting up the JFileChooser
+            // Setting up the JFileChooser
             // And putting a txt file filter on the JFileChooser
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter filter= new FileNameExtensionFilter("Text Files", "txt");
             chooser.setFileFilter(filter);
             chooser.showOpenDialog(menu);
             
-            // Then figure out how to close the old program
-            
-            // Storing file selected from JFileChooser
-            // Then storing the maze.txt file and deleting that while
-            // and replacing it with an empty maze.txt file
-            // That will copy the selected file's contents into it
+            // Saving the selected file into variable
             File selectedFile = chooser.getSelectedFile();
-            File mazeFile = new File("maze.txt");
-            mazeFile.delete();
             
-            // The blank copy mazeFile we are copying to
-            File newMazeFile = new File("maze.txt");
             
-            // Try Catch Block that is trying to copy the selectedFiles
-            // Contents into the maze.txt file
+            // Run is a flag detecting whether or not 
+            // The JFileChooser is exited instead of choosing a file
+            // Which will in turn keep everything the same instead
+            // of deleting the maze.txt file like my setup used to have
+            boolean run = false;
             
             try{
-            Files.copy(selectedFile.toPath(), newMazeFile.toPath());
-                System.out.println("File Copy Successful");
+                run = selectedFile.exists();
             }
-            catch(IOException err){
-                err.printStackTrace();
-                System.out.println("File Copy Unsuccessful");
+            catch(NullPointerException errr){
+                System.out.println("You prematurely exited out, please select a file");
             }
+            
+            // Giant if statement that runs if the run flag is true
+            if(run){
+                // Removes the old grid
+                try{
+                    for(int i =0; i<grid.length; i++)
+                        for(int j=0; j<grid[i].length; j++)
+                            window.remove(grid[i][j]);
+                }
+                catch(NullPointerException errrr){
+            
+                }
+                File mazeFile = new File("maze.txt");
+                mazeFile.delete();
+            
+                // The blank copy mazeFile we are copying to
+                File newMazeFile = new File("maze.txt");
+            
+                // Try Catch Block that is trying to copy the selectedFiles
+                // Contents into the maze.txt file
+                try{
+                    Files.copy(selectedFile.toPath(), newMazeFile.toPath());
+                    System.out.println("File Copy Successful");
+                }
+                catch(IOException err){
+                    err.printStackTrace();
+                    System.out.println("File Copy Unsuccessful");
+                }
         
-            // This is copy and pasted, just remakes the JPanel
-            // and makes it visually nice
-            try {
-                fileToRead = new Scanner(new File("maze.txt"));
-                ROW = fileToRead.nextInt();
-                COL = fileToRead.nextInt();
-            }
-            catch(FileNotFoundException errr) {
-                JOptionPane.showMessageDialog(window,"Default maze not found. " +
-                    "\nSelect a maze to solve from the menu," +
-                    "\nor rename maze to maze.txt", "Error", JOptionPane.ERROR_MESSAGE);
-                allowMazeUpdate = false;
-            }
+                // This is copy and pasted, just remakes the JPanel
+                // and makes it visually nice
+                try {
+                    fileToRead = new Scanner(new File("maze.txt"));
+                    ROW = fileToRead.nextInt();
+                    COL = fileToRead.nextInt();
+                }
+                catch(FileNotFoundException errr) {
+                    JOptionPane.showMessageDialog(window,"Default maze not found. " +
+                        "\nSelect a maze to solve from the menu," +
+                        "\nor rename maze to maze.txt", "Error", JOptionPane.ERROR_MESSAGE);
+                    allowMazeUpdate = false;
+                }
 
-            if(allowMazeUpdate) {
-            // Now establish the Layout - appropriate to the grid size
-                window.setLayout(new GridLayout(ROW, COL));
-                grid= new JPanel[ROW][COL];
-                data = fileToRead.nextLine();
-                for(int i=0; i<ROW; i++) {
+                
+                // Now establish the Layout - appropriate to the grid size
+                    window.setLayout(new GridLayout(ROW, COL));
+                    grid= new JPanel[ROW][COL];
                     data = fileToRead.nextLine();
-                    for(int j=0; j<COL; j++) {
-                        grid[i][j] = new JPanel();
-                        grid[i][j].setName("" + i + ":" + j);
-                        if(data.charAt(j) == '*') 
-                            grid[i][j].setBackground(WALL_COLOR);
+                    for(int i=0; i<ROW; i++) {
+                        data = fileToRead.nextLine();
+                        for(int j=0; j<COL; j++) {
+                            grid[i][j] = new JPanel();
+                            grid[i][j].setName("" + i + ":" + j);
+                            if(data.charAt(j) == '*') 
+                                grid[i][j].setBackground(WALL_COLOR);
 					// Do not add a mouse listener to the border square
-                        else if(i != 0 && j != 0 && i != COL-1 && j != ROW-1) {
+                            else if(i != 0 && j != 0 && i != COL-1 && j != ROW-1) {
 						grid[i][j].setBackground(OPEN_COLOR);
 						grid[i][j].addMouseListener(new MazeListener());
                     }
@@ -357,13 +374,15 @@ public class MazeLoader {
 						grid[i][j].setBackground(OPEN_COLOR);
 					
                         window.add(grid[i][j]);
+                    }
                 }
-            }
                 fileToRead.close();
                 window.pack();
-            }
-
-        }
+                 // End of printing file to screen
+            
+            } // End of run flag
+        
+        } // End of ActionPerformed Method
     
     } // end of LoadMazeFromFile class
     
@@ -384,6 +403,22 @@ public class MazeLoader {
         @Override
         public void actionPerformed(ActionEvent e) {
             
+            // Unedit for timer solution
+            
+            /*
+            if(timerCount >= -1){
+            grid[solutionArray.get(timerCount).x][solutionArray.get(timerCount).y].setBackground(PATH_COLOR);
+            timerCount--;
+            }
+            if(timerCount == -1){
+                timer.stop();
+                solutionArray.clear();
+            }
+        */
+        
         }
+    
     }
+    
+
 }
