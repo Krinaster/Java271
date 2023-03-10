@@ -114,4 +114,4 @@ public class Base extends Polygon {
     public int hill3Center(){
         return xpoints[11];
     }
-} // End of Base
+}

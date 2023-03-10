@@ -2,6 +2,8 @@ package missilecommand;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
@@ -29,7 +31,7 @@ public class GUI {
         // Creating Panels
         panel = new Background();
         window.addMouseListener(new ClickListener());
-        
+        window.addKeyListener(new RefillAmmo());
         // Creating Timers
         shooterTimer = new Timer(10, new shotMissileListener());
         missileTimer = new Timer(25, new alienMissileListener());
@@ -50,6 +52,26 @@ public class GUI {
         
     }
 
+    public class RefillAmmo implements KeyListener{
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+           
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+            if(ke.getKeyCode() == KeyEvent.VK_SPACE)
+                panel.refillAmmo();
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
+           
+        }
+    
+    }
+    
     public class ClickListener implements MouseListener{
 
         @Override
@@ -101,6 +123,7 @@ public class GUI {
         @Override
         public void actionPerformed(ActionEvent ae) {
             panel.updateAlienMissile();
+
         }
     
     }

@@ -61,7 +61,7 @@ public class Background extends JPanel {
         
         
         // Will Draw Cities will default to 6 cities
-        g2.setColor(Color.RED);
+        g2.setColor(city[0].getCityColor());
         for(City c: city)
             g2.fill(c);
 
@@ -94,7 +94,7 @@ public class Background extends JPanel {
         for(int i =0; i<activeMissile.size(); i++){
             if(activeMissile.get(i).intersects(city[0].getBounds())){
                 activeMissile.get(i).setCurColor(Color.red);
-                city[0].setCityColor(new Color(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256)));
+                city[0].setCityColor(Color.BLUE);
             }
             //System.out.println("City Bounds" + city[0].getBounds());
             //System.out.println(shotMissile.get(i).getLocation());
@@ -187,10 +187,12 @@ public class Background extends JPanel {
 
     // Method that translates the alien missiles
     public void updateAlienMissile(){
-        int deltaX = 5, deltaY = 5;
+        int deltaX = 3, deltaY = 3;
         for(int i=0; i<activeMissile.size(); i++){
             activeMissile.get(i).translate((int)(deltaX*Math.sin(activeMissile.get(i).getAngle())),
                     (int)(deltaY*Math.cos(activeMissile.get(i).getAngle())));
+            activeMissile.get(i).setAngle(Math.atan2(city[activeMissile.get(i).getTarget()].getCenterX()- activeMissile.get(i).getX() + 10,
+                    city[activeMissile.get(i).getTarget()].getBottom() - activeMissile.get(i).getY() + 10));
             // Update the angle as the missile moves
         }
     
