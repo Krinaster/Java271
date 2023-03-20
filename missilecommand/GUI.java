@@ -42,6 +42,7 @@ public class GUI {
         
         // Setting window visible
         window.setVisible(true);
+        window.setResizable(false);
         
         // Adding initial creation of Missiles
         panel.createMissiles(missileCount);
@@ -83,6 +84,7 @@ public class GUI {
         public void mousePressed(MouseEvent me) {
             panel.getCoordinates(me.getX(),me.getY());
             panel.shootMissile(me.getX(),me.getY());
+            panel.drawRectangle(me.getX(), me.getY());
         }
 
         @Override

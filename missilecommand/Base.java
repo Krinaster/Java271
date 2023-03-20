@@ -15,7 +15,7 @@ public class Base extends Polygon {
         int x = 0,
             segmentLength = width/29, 
             baseHeight = y-100, 
-            raisedHeight = y-200;
+            raisedHeight = y-175;
         
         
         npoints = 16;
@@ -100,7 +100,7 @@ public class Base extends Polygon {
     }
     
     public int hillHeight(){
-        return 100;
+        return 75;
     }
     
     public int hill1Center(){
