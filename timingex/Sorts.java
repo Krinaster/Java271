@@ -99,8 +99,60 @@ public class Sorts {
         a[l] = pivotValue;
         return l;
         
+    } // End of Quick Sort -------------------------
+    
+    // Merge Sort O(n) = n lg n
+    public static void mergeSort(int[] a){
+        int[] b = a.clone();
+        order(b, a, 0, a.length-1);
+        
     }
     
+    // Recursive method to split the array and order the sublists
+    // with two lists that are the same and manipulating both to achieve desired
+    // outcome, where s is source and d is destination arrays
+    // l and h are low and high points in the individuals arrays
+    private static void order(int[] s, int[] d, int l, int h){
+        int m = -1;
+        if(l != h){
+            m = (l + h)/2;
+            order(d, s, l, m);
+            order(d, s, m+1, h);
+            merge(s, d, l, m, h);
+        }
+    
+    }
+    
+    // Recursive method to merge the arrays back together using the source
+    // and dest array with the low mid and high points
+    // dI = destinationIndex
+    private static void merge(int[] s, int[] d, int l, int m, int h){
+        int i = l, j=m+1, dI = l;
+        
+        // Start collecting smaller values to the destination array
+        do{
+            if(s[i] < s[j])
+                d[dI] = s[i++]; // Increments i after setting destination at destinationIndex = i and then increments
+            else
+                d[dI] = s[j++]; 
+            dI++;
+                
+        } while(i<= m && j<= h);
+        // Once the do while loops exits, then one list is exhausted
+        // Copy the remaining elements to the destination
+        
+        if(i > m){
+            do{
+                d[dI++] = s[j++]; // Incrementing dI and j after setting the elements equal
+            }while(j <= h);
+        }
+        else
+            do{
+                d[dI++] = s[i++];
+            }while(i <= m);
+        
+        
+    }
 
 
 }
