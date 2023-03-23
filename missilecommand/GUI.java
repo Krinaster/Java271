@@ -14,7 +14,7 @@ public class GUI {
     
     private JFrame window;
     private Background panel;
-    private Timer shooterTimer, missileTimer;
+    private Timer shooterTimer, missileTimer, explosionTimer;
     
     public int missileCount = 20;
     
@@ -35,6 +35,7 @@ public class GUI {
         // Creating Timers
         shooterTimer = new Timer(10, new shotMissileListener());
         missileTimer = new Timer(25, new alienMissileListener());
+        explosionTimer = new Timer(50, new explosionTimerListener());
         
         // Adding Panels
         window.add(panel);
@@ -50,7 +51,7 @@ public class GUI {
         // Starting Timer
         shooterTimer.start();
         missileTimer.start();
-        
+        explosionTimer.start();
     }
 
     public class RefillAmmo implements KeyListener{
@@ -84,7 +85,6 @@ public class GUI {
         public void mousePressed(MouseEvent me) {
             panel.getCoordinates(me.getX(),me.getY());
             panel.shootMissile(me.getX(),me.getY());
-            panel.drawRectangle(me.getX(), me.getY());
         }
 
         @Override
@@ -125,7 +125,16 @@ public class GUI {
         @Override
         public void actionPerformed(ActionEvent ae) {
             panel.updateAlienMissile();
+            panel.createMissiles(5);
+        }
+    
+    }
+    
+    private class explosionTimerListener implements ActionListener{
 
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            panel.updateExplosion();
         }
     
     }

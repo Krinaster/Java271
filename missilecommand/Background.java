@@ -4,13 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
-import javax.swing.Timer;
 
 public class Background extends JPanel {
     
@@ -18,13 +17,13 @@ public class Background extends JPanel {
     private ImageIcon Shooter;
     private ArrayList<Missile> activeMissile = new ArrayList<>();
     private ArrayList<Missile> shotMissile = new ArrayList<>();
-    private ArrayList<Rectangle> tarRec = new ArrayList<>();
+    private ArrayList<Explosion> boom = new ArrayList<>();
     private Random rand = new Random();
-    private Timer shootMissiles;
     private int[] Ammo = new int[3];
     
     private int curMissileNum = 10;
     private int AmmoCount = 10;
+    private int explosionSize = 85;
     
     public Background(){
         super();
@@ -69,8 +68,6 @@ public class Background extends JPanel {
         for(City c: city)
             g2.fill(c);
         
-        g2.setColor(Color.WHITE);
-        g2.draw(new Ellipse2D.Double(500, 500, 300, 200));
         
         // Drawing missiles at top
         for(int i =0; i<activeMissile.size(); i++){
@@ -107,23 +104,31 @@ public class Background extends JPanel {
                 }
             }
         }
+        
        
-        // Visual aid to show the rectangles that will say if it intersects or not
-       for(int i =0; i<tarRec.size(); i++){
-            g2.setColor(Color.WHITE);
-            g2.draw(tarRec.get(i));
-        }
-        
-        for(int i =0; i<tarRec.size(); i++)
-            if(shotMissile.get(i).intersects(tarRec.get(i))){
-                shotMissile.get(i).setCurColor(Color.red);
-                g2.fill(new Ellipse2D.Double(tarRec.get(i).x-25, tarRec.get(i).y-25, 50, 50));
-                // This only removes the first one and then the offset between the shotMissile and TargetRectangle
-                // is off by one, and so the intersections arent there
-                // shotMissile.remove(0);
-            }
-        
-        
+       // Lots of option regarding the intersection, and I think 
+       // personally that maybe at the end I go through and test what is the best options
+       // to see if any of them actually are good are not
+       for(int i =0; i<shotMissile.size(); i++)
+           if(shotMissile.get(i).intersects(shotMissile.get(i).getTargetX(), shotMissile.get(i).getTargetY(), 5, 5)){
+               boom.add(new Explosion(shotMissile.get(i).getTargetX()-shotMissile.get(i).width+8, shotMissile.get(i).getTargetY()-shotMissile.get(i).height-9, 10));
+               shotMissile.remove(i);
+           }
+       
+       // Drawing the explosions
+       g2.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+       for(int i =0; i<boom.size(); i++)
+           g2.fill(boom.get(i));
+       
+       
+       // Destroying alien missiles if intersected by explosion
+       for(int i =0; i<boom.size(); i++)
+           for(int j=0; j<activeMissile.size(); j++)
+               if(boom.get(i).intersects(activeMissile.get(j))){
+                   boom.add(new Explosion(activeMissile.get(j).x, activeMissile.get(j).y,25));
+                   activeMissile.remove(j);
+               }
+       
     }// End of paint component
     
     // Method that initializes the cities
@@ -159,7 +164,6 @@ public class Background extends JPanel {
     public void shootMissile(int x, int y){
         // shotMissile.add(new Missile(50, 500, 20,20,Math.atan2(x-50,y-500),1,1));
         
-        // Consider making the missiles relative compared to absolute location
         if(x < getWidth()/3 && Ammo[0] >0){
             shotMissile.add(new Missile(190,620,20,20,Math.atan2(x-200,y-620),1,x,y));
             Ammo[0]--;
@@ -173,15 +177,21 @@ public class Background extends JPanel {
             shotMissile.add(new Missile(1370,620,20,20,Math.atan2(x-1370,y-620),1,x,y));
             Ammo[2]--;
         }
-        // Look into timer so that when I shoot the missile is automatically translates itself to the target
-        // and blow up
+        else if(Ammo[0] == 0 && Ammo[1] > 0){
+            shotMissile.add(new Missile(getWidth()/2,620,20,20,Math.atan2(x-(getWidth()/2),y-620),1,x,y));
+            Ammo[1]--;
+        }
+        else if(Ammo[0] == 0 && Ammo[1] == 0 && Ammo[2] > 0){
+            shotMissile.add(new Missile(1370,620,20,20,Math.atan2(x-1370,y-620),1,x,y));
+            Ammo[2]--;
+        }
         
-        // shotMissile.get(0).translate(activeMissile.get(0).getTarget(), activeMissile.get(0).getTarget());
     }
+    
    
     // Method that moves the shooter missiles
     public void updateShotMissile(){
-        int deltaX = 5, deltaY = 5;
+        int deltaX = 6, deltaY = 6;
         for(int i=0; i<shotMissile.size(); i++){
             shotMissile.get(i).translate((int)(deltaX*Math.sin(shotMissile.get(i).getAngle())),
                     (int)(deltaY*Math.cos(shotMissile.get(i).getAngle())));
@@ -226,8 +236,14 @@ public class Background extends JPanel {
     
     }
     
-    public void drawRectangle(int x, int y){
-        tarRec.add(new Rectangle(x-4,y-10, 1, 1));
+    public void updateExplosion(){
+        
+        for(int i =0; i<boom.size(); i++){
+            if(boom.get(i).sizeCount <= explosionSize)
+                boom.get(i).grow();
+            else
+                boom.get(i).shrink();
+        }
     }
     
 } // End of background

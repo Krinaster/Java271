@@ -2,49 +2,42 @@
 package missilecommand;
 
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
 
-
-
-public class Explosion extends Ellipse2D {
+public class Explosion extends Ellipse2D.Double {
     
-    public Explosion(){
+    int sizeCount = 0;
+    
+    public Explosion(int x, int y, int radius){
+        this.height = radius;
+        this.width = radius;
+        this.x = x;
+        this.y = y;
+        
+        
     }
-
-    @Override
-    public double getX() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    // Need to associate this method with a timer so that the explosion grows
+    // with time rather than all incrementing
+    public void grow(){
+        // x and y need to decrease at half the rate
+        // of the height and width increase
+        int growthRate = 4;
+        
+        this.height += growthRate;
+        this.width += growthRate;
+        this.x -= growthRate/2;
+        this.y -= growthRate/2;
+        
+        sizeCount += growthRate;
     }
-
-    @Override
-    public double getY() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setFrame(double d, double d1, double d2, double d3) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Rectangle2D getBounds2D() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public void shrink(){
+        int shrinkRate = 4;
+        
+        this.height -= shrinkRate;
+        this.width -= shrinkRate;
+        this.x += shrinkRate/2;
+        this.y += shrinkRate/2;
     }
 
 }
