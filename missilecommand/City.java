@@ -6,16 +6,14 @@ import java.awt.Polygon;
 
 public class City extends Polygon {
     
-    private int segment;
     private Color cityColor;
     
     public City(int x, int y, int l) {
-        cityColor = Color.MAGENTA;
+        cityColor = Color.BLUE;
         
         npoints = 18;
         xpoints = new int[npoints];
         ypoints = new int[npoints];
-        segment = l;
         
         xpoints[0] = x;
         ypoints[0] = y + 8*l;
