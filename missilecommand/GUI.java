@@ -16,7 +16,7 @@ public class GUI {
     private Background panel;
     private Timer shooterTimer, missileTimer, explosionTimer;
     
-    public int missileCount = 20;
+    public int missileCount = 10;
     
     public GUI(){
         
@@ -40,7 +40,6 @@ public class GUI {
         // Adding Panels
         window.add(panel);
         
-        
         // Setting window visible
         window.setVisible(true);
         window.setResizable(false);
@@ -52,6 +51,8 @@ public class GUI {
         shooterTimer.start();
         missileTimer.start();
         explosionTimer.start();
+
+        
     }
 
     public class RefillAmmo implements KeyListener{
@@ -65,6 +66,8 @@ public class GUI {
         public void keyPressed(KeyEvent ke) {
             if(ke.getKeyCode() == KeyEvent.VK_SPACE)
                 panel.refillAmmo();
+            if(ke.getKeyCode() == KeyEvent.VK_A)
+                panel.createMissiles(5);
         }
 
         @Override
@@ -125,7 +128,7 @@ public class GUI {
         @Override
         public void actionPerformed(ActionEvent ae) {
             panel.updateAlienMissile();
-            panel.createMissiles(5);
+            // panel.createMissiles(5);
         }
     
     }
