@@ -10,7 +10,7 @@ public class Base extends Polygon {
     
     public Base(int width, int y){
         
-        baseColor = Color.CYAN;
+        baseColor = Color.GRAY;
         
         int x = 0,
             segmentLength = width/29, 
