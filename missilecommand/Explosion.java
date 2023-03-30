@@ -1,6 +1,7 @@
 
 package missilecommand;
 
+
 import java.awt.geom.Ellipse2D;
 
 public class Explosion extends Ellipse2D.Double {
