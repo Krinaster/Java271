@@ -9,10 +9,10 @@ public class Missile extends Rectangle {
     
     private Color curColor;
     private double theta;
-    private int missileNum;
+    private int targetCity;
     private Point target;
     
-    public Missile(int x, int y, int width, int length, double angle, int mNum, 
+    public Missile(int x, int y, int width, int length, double angle, int tCity, 
                     int targetX, int targetY) {
         this.x = x;
         this.y = y;
@@ -20,7 +20,7 @@ public class Missile extends Rectangle {
         this.height = length;
         curColor = Color.WHITE;
         theta = angle;
-        missileNum = mNum;
+        this.targetCity = tCity;
         target = new Point(targetX, targetY);
     }
     
@@ -54,6 +54,10 @@ public class Missile extends Rectangle {
     
     public int getTargetY(){
         return target.y;
+    }
+
+    public int getTargetCity(){
+        return this.targetCity;
     }
 
 }
