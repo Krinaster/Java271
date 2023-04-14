@@ -4,11 +4,12 @@ package timingex;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class TimingEx {
 
-    private static final int SIZE = 46400;
+    private static final int SIZE = 11;
     
     public static void main(String[] args) {
         
@@ -30,7 +31,8 @@ public class TimingEx {
         
         // time the sort
         long start = System.nanoTime();
-        Sorts.quickSort(value);
+         Sorts.BogoSort(value);
+        //Arrays.sort(value);
         long end = System.nanoTime();
         
         // Check the sort visually and with method

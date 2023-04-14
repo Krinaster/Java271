@@ -1,6 +1,11 @@
 
 package timingex;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class Sorts {
     
@@ -153,6 +158,26 @@ public class Sorts {
         
         
     }
+    
+     public static void BogoSort(int[] a){
+        while(!checkSort(a)){
+            List<Integer> list = Arrays.stream(a)        // IntStream
+                                    .boxed()          // Stream<Integer>
+                                    .collect(Collectors.toList());
+            Collections.shuffle(list);
+            for(int i =0; i<list.size(); i++){
+                a[i] = list.get(i);
+            }
+        }
+        
+     }
 
+     
+    private static boolean checkSort(int[] a){
+        for(int i=0; i<a.length-1; i++)
+           if(a[i] > a[i+1])
+               return false;
+        return true;
+    }
 
 }
