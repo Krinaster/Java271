@@ -1,9 +1,11 @@
+
 package timingex;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 
@@ -180,9 +182,51 @@ public class Sorts {
         return true;
     }
     
+    // Radix Sort O(n) = k * n where k = length of the digit values + 1
+    public static void queueRadixSort(int[] a){
+        Queue<Integer>[] bucket = new Queue[10];
+        int index = 0, arrayIndex = 0, passNumber = 0;
+        boolean done = false;
+        
+        for(int i =0; i<bucket.length; i++)
+            bucket[i] = new LinkedList<>();
+        
+        do  {
+            
+            // Parse the array and put in correct buckets
+            for(int i=0; i<a.length; i++){
+                index = a[i]/(int)Math.pow(10, passNumber)%10;
+               // System.out.println("Index of " + a[i] + " = " + index);
+                bucket[index].offer(a[i]);
+            }
+            arrayIndex = 0;
+            // printBuckets(bucket);
+            
+            // See if all values end up in one bucket:
+            done = bucket[0].size() == a.length;
+            
+            // Parsing through all the buckets and emptying them into array
+            for(int i =0; i<bucket.length; i++){
+                while(bucket[i].size() > 0){
+                    a[arrayIndex++] = bucket[i].poll();
+                }
+            }
+            passNumber++;
+        } while(!done);    
+        
+    } // End of radix sort
     
-    // radixSort using 3D array 
-    public static void radixSort(int[] a){
+    private static void printBuckets(Queue<Integer>[] a){
+        for(int i =0; i<a.length; i++){
+            System.out.print("Bucket " + i + ": ");
+            while(a[i].size() > 0)
+                System.out.print(a[i].poll() + " ");
+            System.out.println("");
+        }
+    }
+    
+       // radixSort using 3D array 
+    public static void arrayRadixSort(int[] a){
         int maxLength = max(a);
         int[][][] bins = new int[maxLength][10][];
         int digit = 1;
@@ -251,5 +295,4 @@ public class Sorts {
         }
         
     } // End of copyTo
-    
 }
