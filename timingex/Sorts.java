@@ -1,6 +1,6 @@
-
 package timingex;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -179,5 +179,77 @@ public class Sorts {
                return false;
         return true;
     }
+    
+    
+    // radixSort using 3D array 
+    public static void radixSort(int[] a){
+        int maxLength = max(a);
+        int[][][] bins = new int[maxLength][10][];
+        int digit = 1;
+        int index = 0;
+        // Consider making bins a 3d array so that I can swap the 3d index
+        // for when I want to redefine the array
+        
+        while(digit <= maxLength){
+            countDigit(a, bins, digit);
+            copyTo(a, bins, digit);
+            digit++;
+            index++;
+        }
 
+    }
+    
+    private static int max(int[] a){
+        int max = a[0];
+        int digit = 10;
+        int count = 1;
+        
+        for(int i =1; i<a.length; i++){
+            if(max < a[i])
+                max = a[i];
+        }
+        
+        while(max != max%digit){
+            digit *= 10;
+            count++;
+        }
+
+        return count;
+    }
+    
+    private static void countDigit(int[] a, int[][][] bins, int digit){
+        int[] digitCount = new int[10];
+        int digitBin = 0;
+        digit--;
+        
+        for(int i =0; i<a.length; i++){
+            digitBin = a[i]/(int)Math.pow(10, digit)%10;
+            digitCount[digitBin]++;
+        }
+        
+        for(int i =0; i<digitCount.length; i++){
+            bins[digit][i] = new int[digitCount[i]];
+        }
+
+    } // End of countDigit
+    
+    private static void copyTo(int[] a, int[][][] bins, int digit){
+        int[] arrayIndex = new int[10];
+        int digitBin = 0, index = 0;
+        digit--;
+        
+        for(int i=0; i<a.length; i++){
+            digitBin = a[i]/(int)Math.pow(10, digit)%10;
+            bins[digit][digitBin][arrayIndex[digitBin]++] = a[i];
+        }
+        
+        for(int i =0; i<bins[digit].length; i++){
+            for(int j=0; j<bins[digit][i].length; j++){
+                a[index] = bins[digit][i][j];
+                index++;
+            }
+        }
+        
+    } // End of copyTo
+    
 }
