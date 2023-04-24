@@ -1,4 +1,5 @@
-package Blocks;
+
+package blocks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -118,9 +119,10 @@ public class Blocks {
             temp.push(blocks[pos[num1]].pop());
             
             // Returning all blocks on top of B
+            if(pos[num1] != pos[num2])
             while(blocks[pos[num2]].peek() != num2){
-				moveBack(blocks[pos[num2]].pop());
-			}
+		moveBack(blocks[pos[num2]].pop());
+            }
             
             // Adding temp stack to b
             while(!temp.isEmpty()){
