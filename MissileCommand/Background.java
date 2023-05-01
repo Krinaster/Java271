@@ -10,8 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
 
@@ -34,7 +35,7 @@ public class Background extends JPanel {
     private int shotDX = 6, shotDY = 6;
     private int shooter1X = 190, shooter2X = 792, shooter3X = 1370;
     private int shooterY = 620;
-    private int score = 0;
+    private int score = 0, curScore = 0;
     private int level = 1;
     private int timer = 0;
 
@@ -43,7 +44,7 @@ public class Background extends JPanel {
         super();
         setBackground(Color.BLACK);
         Shooter = new ImageIcon("Shooter.png");
-        // Pause = new Timer(1000, new PauseListener());
+        Pause = new Timer(2000, new PauseListener());
 
         initializeCities();
         
@@ -84,12 +85,14 @@ public class Background extends JPanel {
         g2.drawString(" "+Ammo[1], Base.hill2Center()-15, Base.valleyHeight());
         g2.drawString(" "+Ammo[2], Base.hill3Center()-15, Base.valleyHeight());
                 
-        
-        // This is missile is required to not crash my program
-        // Dont know why, but its important
-        //if(activeMissile.isEmpty())
-         //   activeMissile.add(new Missile(-1000000,-1000000, 1, 1, 1, 1, 1, 1));
-        
+        // Drawing Score
+        g2.setColor(Color.WHITE);
+            g2.drawString("Score: " + (int)(score+curScore), getWidth()/2-140, 50);
+
+        // Drawing Level
+        if(!emptyLevel())
+            g2.drawString("Level: " + (int)(level-1), 200, 50);
+
         // Drawing missiles at top
             for(int i =0; i<activeMissile.size(); i++){
             // Rotating all the missiles around their center to angle towards their target
@@ -107,13 +110,9 @@ public class Background extends JPanel {
                 g2.draw(shotMissile.get(i));
                 repaint();
             }
+            
         
-        
-
-       
-        
-        
-        // Drawing where the shot missile is going
+        // Drawing where the crosshair
         g2.setColor(Color.WHITE);
         for(Rectangle r: marker)
             g2.draw(r);
@@ -148,6 +147,8 @@ public class Background extends JPanel {
                     if(boom.get(i).intersects(activeMissile.get(j))){
                         boom.add(new Explosion(activeMissile.get(j).x, activeMissile.get(j).y,25));
                         activeMissile.remove(j);
+                        //score += 100;
+                        curScore += 10;
                }
             }
 
@@ -181,17 +182,45 @@ public class Background extends JPanel {
 
         // LEVELING SYSTEM
         if(emptyLevel()){
-            g2.drawString("Level " + level, getWidth()/2, getHeight()/2);
-            timer++;
-            System.out.println(timer);
-            if(timer > 2500){
+            g2.setColor(Color.WHITE);
+            g2.drawString("Level " + level, getWidth()/2-100, getHeight()/2-100);
+            Pause.start();
+            if(level != 1){
+                g2.drawString("Survival Bonus: " + curScore + " x " + level, getWidth()/2-400, getHeight()/2);
+                g2.drawString("Remaining Ammo Bonus: " + (int)(Ammo[0] + Ammo[1] + Ammo[2]) + " x " + level, getWidth()/2-400, 500);
+            }
+
+            // System.out.println(timer);
+            if(timer > 0){
+                Pause.stop();
+                timer = 0;
                 createMissiles(GUI.missileCount);
+                
+                // Increasing Ammo by 1 every 5 levels
+                if(level %5 == 0)
+                    AmmoCount++;
+
+                // Applying the bonus survival bonus
+                curScore *= level;
+                score += curScore;
+                if(level != 1)
+                    score += (Ammo[0] + Ammo[1] + Ammo[2])*level;
+                curScore = 0;
+
+                // Increasing Missiles, level, and refilling Ammo
                 GUI.missileCount += rand.nextInt(3)+1;
                 level++;
                 refillAmmo();
-                timer = 0;
             }
         }
+
+        // First off do game over,
+        // Maybe add options to retry and exit
+        // Add difficulty
+        // Figure out computer speed of this program so that the timer is adjusted accordingly
+        // Add Javadoc comments
+        // Can adjust the timer system to just be a timer that increments after 2 seconds
+        // and when incremented the new level plays and the incrementation is reset
 
         repaint();
     }// End of paint component -------------------------------------------
@@ -308,7 +337,8 @@ public class Background extends JPanel {
         for(int i =0; i<n; i++){
             int x = rand.nextInt(getWidth());
             int target = rand.nextInt(city.size());
-            int y = 0-rand.nextInt(500);
+            // Randomly spawns the missiles above the horizon, providing delay between each missile
+            int y = 0-rand.nextInt(150)*level;
             // activeMissile.add(new Missile(x, 5, 20,20,270, curMissileNum++, target));
             activeMissile.add(new Missile(x, y, 20,30, Math.atan2(city.get(target).getCenterX()-x, city.get(target).getCenterY()), target, 
                     city.get(target).getCenterX(),city.get(target).getCenterY()));
@@ -388,8 +418,8 @@ public class Background extends JPanel {
     }
 
     public boolean emptyLevel(){
-        System.out.println("Number of enemy missiles " + activeMissile.size());
-        System.out.println("# of Explosions " + boom.size());
+        //System.out.println("Number of enemy missiles " + activeMissile.size());
+        //System.out.println("# of Explosions " + boom.size());
         if(activeMissile.isEmpty() && boom.isEmpty())
             return true;
         return false;
@@ -402,6 +432,15 @@ public class Background extends JPanel {
     public void destroyMissiles(){
         for(int i =0; i<activeMissile.size(); i++)
             activeMissile.remove(0);    
+    }
+
+    private class PauseListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer++;
+        }
+
     }
     
 } // End of background

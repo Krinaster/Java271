@@ -96,9 +96,11 @@ public class GUI {
 
         @Override
         public void mousePressed(MouseEvent me) {
-            panel.getCoordinates(me.getX(),me.getY());
-            panel.crossHair(me.getX(), me.getY());
-            panel.shootMissile(me.getX(),me.getY());
+            //panel.getCoordinates(me.getX(),me.getY());
+            if(!panel.emptyLevel()){
+                panel.crossHair(me.getX(), me.getY());
+                panel.shootMissile(me.getX(),me.getY());
+            }
           
         }
 
