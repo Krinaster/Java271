@@ -3,17 +3,28 @@ package missilecommand;
 import java.awt.Color;
 import java.awt.Polygon;
 
-
+/**
+ *
+ * @author student
+ */
 public class City extends Polygon {
     
+    private int segment;
     private Color cityColor;
     
+    /**
+     *
+     * @param x
+     * @param y
+     * @param l
+     */
     public City(int x, int y, int l) {
-        cityColor = Color.BLUE;
+        cityColor = Color.MAGENTA;
         
         npoints = 18;
         xpoints = new int[npoints];
         ypoints = new int[npoints];
+        segment = l;
         
         xpoints[0] = x;
         ypoints[0] = y + 8*l;
@@ -53,42 +64,82 @@ public class City extends Polygon {
         ypoints[17] = y + 8*l;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getTop() {
         return ypoints[4];
     }
     
+    /**
+     *
+     * @return
+     */
     public int getBottom() {
         return ypoints[17];
     }
     
+    /**
+     *
+     * @return
+     */
     public int getRight() {
         return xpoints[16];
     }
     
+    /**
+     *
+     * @return
+     */
     public int getLeft() {
         return xpoints[0];
     }
     
+    /**
+     *
+     * @return
+     */
     public int getCenterX() {
         return (getRight() + getLeft()) / 2;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getCenterY() {
         return (getTop() + getBottom()) / 2;
     }
     
+    /**
+     *
+     * @return
+     */
     public Color getCityColor(){
         return cityColor;
     }
     
+    /**
+     *
+     * @param c
+     */
     public void setCityColor(Color c){
         cityColor = c;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getCityLength(){
         return getRight() - getLeft();
     }
     
+    /**
+     *
+     * @return
+     */
     public int getCityHeight(){
         return getTop()-getBottom();
     }

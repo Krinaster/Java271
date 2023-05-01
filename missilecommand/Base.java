@@ -3,19 +3,28 @@ package missilecommand;
 import java.awt.Color;
 import java.awt.Polygon;
 
+/**
+ *
+ * @author student
+ */
 public class Base extends Polygon {
     
     private Color baseColor;
     private int segmentLength;
     
+    /**
+     *
+     * @param width
+     * @param y
+     */
     public Base(int width, int y){
         
-        baseColor = Color.GRAY;
+        baseColor = Color.CYAN;
         
         int x = 0,
             segmentLength = width/29, 
             baseHeight = y-100, 
-            raisedHeight = y-175;
+            raisedHeight = y-200;
         
         
         npoints = 16;
@@ -71,47 +80,91 @@ public class Base extends Polygon {
         ypoints[15] = y;
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getBaseColor(){
         return baseColor;
     }
     
+    /**
+     *
+     * @return
+     */
     public int valley1LeftBound(){
         return xpoints[5];
     }
     
+    /**
+     *
+     * @return
+     */
     public int valley1RightBound(){
         return xpoints[6];
     }
     
+    /**
+     *
+     * @return
+     */
     public int valley2LeftBound(){
         return xpoints[9];
     }
     
+    /**
+     *
+     * @return
+     */
     public int valley2RightBound(){
         return xpoints[10];
     }
     
+    /**
+     *
+     * @return
+     */
     public int valleyHeight(){
         return ypoints[9];
     }
     
+    /**
+     *
+     * @return
+     */
     public int hillLength(){
         return xpoints[4]-xpoints[3];
     }
     
+    /**
+     *
+     * @return
+     */
     public int hillHeight(){
-        return 75;
+        return 100;
     }
     
+    /**
+     *
+     * @return
+     */
     public int hill1Center(){
         return xpoints[3];
     }
     
+    /**
+     *
+     * @return
+     */
     public int hill2Center(){
         return xpoints[7];
     }
     
+    /**
+     *
+     * @return
+     */
     public int hill3Center(){
         return xpoints[11];
     }
-}
+} // End of Base

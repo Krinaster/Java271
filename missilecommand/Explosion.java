@@ -1,13 +1,21 @@
-
 package missilecommand;
-
 
 import java.awt.geom.Ellipse2D;
 
+/**
+ *
+ * @author student
+ */
 public class Explosion extends Ellipse2D.Double {
     
     int sizeCount = 0;
     
+    /**
+     *
+     * @param x
+     * @param y
+     * @param radius
+     */
     public Explosion(int x, int y, int radius){
         this.height = radius;
         this.width = radius;
@@ -19,6 +27,10 @@ public class Explosion extends Ellipse2D.Double {
     
     // Need to associate this method with a timer so that the explosion grows
     // with time rather than all incrementing
+
+    /**
+     *
+     */
     public void grow(){
         // x and y need to decrease at half the rate
         // of the height and width increase
@@ -32,6 +44,9 @@ public class Explosion extends Ellipse2D.Double {
         sizeCount += growthRate;
     }
     
+    /**
+     *
+     */
     public void shrink(){
         int shrinkRate = 4;
         
